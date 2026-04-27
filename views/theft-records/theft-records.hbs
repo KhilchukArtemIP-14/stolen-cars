@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Theft records</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous" />
+</head>
+<body>
+<div class="container">
+    <h1>Theft Records</h1>
+    <a class="btn btn-success" href="/records/create">Add Record</a>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Record ID</th>
+            <th scope="col">Car Info</th>
+            <th scope="col">Status</th>
+            <th scope="col">Car Number</th>
+            <th scope="col">Owner Surname</th>
+            <th scope="col">Date Created</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each records}}
+            <tr>
+                <td>{{this._id}}</td>
+                <td>{{this.car_info_id.brand_name}} {{this.car_info_id.model_name}}</td>
+                <td>{{this.status_id.status_name}}</td>
+                <td>{{this.car_number}}</td>
+                <td>{{this.owner_surname}}</td>
+                <td>{{dateFormat this.date_created "MMMM Do YYYY, hh:mm:ss a" }}</td>
+                <td>
+                    <a class="btn btn-primary" href="records/{{this._id}}">View</a>
+                    <a class="btn btn-warning" href="records/{{this._id}}/edit">Edit</a>
+                    <form action="" method="post" style="display: inline;">
+                        <input type="hidden" name="record_id" value="{{this._id}}">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+    {{#unless records}}
+        <p>No records found</p>
+    {{/unless}}
+</div>
+</body>
+</html>

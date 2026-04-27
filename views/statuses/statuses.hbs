@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theft Statuses</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+</head>
+
+<body>
+<div class="container">
+    <h1>Theft Status</h1>
+
+<div>
+    <a class="btn btn-success" href="statuses/create" style="margin-right: auto">Add status</a>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Status Name</th>
+        <th scope="col">Date Created</th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+<tbody>
+{{#each statusesData}}
+    <tr>
+        <td>{{ this.value._id }}</td>
+        <td>{{this.value.status_name}}</td>
+        <td>{{dateFormat this.value.date_created "MMMM Do YYYY, hh:mm:ss a"}}</td>
+    <td>
+        <a class="btn btn-primary" href="statuses/{{this.value._id}}">View</a>
+        <a class="btn btn-warning" href="statuses/{{this.value._id}}/edit">Edit</a>
+    <form action="" method="post" style="display: inline">
+        <button type="submit" class="btn btn-danger" name="status_id" value="{{this.value._id}}"  {{#unless this.canDelete}}disabled{{/unless}}>Delete</button>
+            <div class="text-danger" style="max-width: 200px"  {{#if this.canDelete}}hidden="hidden" {{/if}}>Please, remove related records before deleting</div>
+    </form>
+    </td>
+    </tr>
+    {{/each}}
+    </tbody>
+    </table>
+
+    {{#unless statusesData}}
+            <p>No records found</p>
+    {{/unless}}
+    </div>
+    </div>
+    </body>
+
+    </html>

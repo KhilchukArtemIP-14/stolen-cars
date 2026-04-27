@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car infos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+</head>
+
+<body>
+<div class="container">
+    <h1>Car infos</h1>
+    <a class="btn btn-success" href="cars/create" style="margin-right: auto">Add car info</a>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Brand</th>
+            <th scope="col">Model</th>
+            <th scope="col">Date Created</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+    {{#each carsData}}
+        <tr>
+            <td> {{this.value.id}}</td>
+            <td> {{this.value.brand_name}}</td>
+            <td> {{this.value.model_name}}</td>
+            <td>{{dateFormat this.value.date_created "MMMM Do YYYY, hh:mm:ss a" true}}</td>
+            <td>
+                <a class="btn btn-primary" href="cars/{{this.value.id}}">View</a>
+                <a class="btn btn-warning" href="cars/{{this.value.id}}/edit">Edit</a>
+                <form action="" method="post" style="display:inline">
+                    <input type="hidden" name="car_id" value="{{this.value.id}}">
+                    <button type="submit" class="btn btn-danger" {{#unless this.canDelete}}disabled{{/unless}}>Delete</button>
+                    <div class="text-danger" style="max-width: 200px"{{#if this.canDelete}}hidden="hidden"{{/if}}>Please, remove related records before deleting</div>
+        </form>
+        </td>
+        <td>
+
+        </td>
+        </tr>
+
+    {{/each}}
+
+</div>
+</body>
+
+</html>

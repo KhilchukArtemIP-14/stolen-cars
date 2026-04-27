@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Edit Theft Record</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous" />
+</head>
+<body>
+<div class="container">
+    <h1>Edit Theft Record</h1>
+    <form action="" method="post">
+        <div class="mb-3">
+            <label for="car_info_id" class="form-label">Car Info ID</label>
+            <select class="form-select" id="car_info_id" name="car_info_id" required>
+                <option value="">Select Car Info</option>
+                {{#each carInfos}}
+                    <option value="{{this.id}}" {{#ifEqual this.id ../record.car_info_id}}selected{{/ifEqual}}>
+                        {{this.brand_name}} {{this.model_name}}
+                    </option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="status_id" class="form-label">Status ID</label>
+            <select class="form-select" id="status_id" name="status_id" required>
+                <option value="">Select Status</option>
+                {{#each statuses}}
+                    <option value="{{this.id}}" {{#ifEqual this.id ../record.status_id}}selected{{/ifEqual}}>{{this.status_name}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="car_number" class="form-label">Car Number</label>
+            <input type="text" class="form-control" id="car_number" name="car_number" required value="{{record.car_number}}">
+        </div>
+        <div class="mb-3">
+            <label for="owner_surname" class="form-label">Owner Surname</label>
+            <input type="text" class="form-control" id="owner_surname" name="owner_surname" required value="{{record.owner_surname}}">
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Theft Record Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous" />
+</head>
+<body>
+<div class="container">
+    <h1>Theft Record Details</h1>
+
+    {{#if record}}
+        <h5>&emsp;Car Info: {{record.car_info_id.brand_name}} {{record.car_info_id.model_name}}</h5>
+        <h5>&emsp;Status: {{record.status_id.status_name}}</h5>
+        <h5>&emsp;Car Number: {{record.car_number}}</h5>
+        <h5>&emsp;Owner Surname: {{record.owner_surname}}</h5>
+        <h5>&emsp;Date Created: {{dateFormat record.date_created "MMMM Do YYYY, hh:mm:ss a"}}</h5>
+    {{else}}
+        <p>Theft record not found.</p>
+    {{/if}}
+</div>
+</body>
+</html>
