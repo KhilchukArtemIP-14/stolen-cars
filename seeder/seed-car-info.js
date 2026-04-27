@@ -9,7 +9,7 @@ const seedData = [
     { brand_name: 'Nissan', model_name: 'Altima' }
 ];
 
-mongoose.connect('mongodb://localhost:27017/BE_Lab5')
+mongoose.connect('mongodb://localhost:27017/BE_LabS')
     .then(async () => {
         console.log('Connected to MongoDB');
         for (var d of seedData) {

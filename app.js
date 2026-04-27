@@ -5,6 +5,7 @@ const webRouter = require("./routes/web-routes")
 const mongoose = require("mongoose");
 const bodyParser = require('body-parser')
 const apiRouter = require("./routes/api-routes");
+const graphqlMiddleware = require('./graphql');
 
 //middleware for parsing request body
 app.use(bodyParser.json())

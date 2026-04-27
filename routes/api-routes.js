@@ -2,6 +2,7 @@ const express = require('express')
 const {CarInfosJsonService} = require("../services/car-infos/car-infos-json-service");
 const {StatusesJsonService} = require("../services/statuses/statuses-json-service");
 const {TheftRecordsJsonService} = require("../services/theft-records/theft-records-json-service");
+const auth = require('../middleware/auth');
 
 const apiRouter = new express.Router();
 
@@ -25,6 +26,8 @@ apiRouter.get("/cars/:id", cars.getCar);
 apiRouter.get("/records", records.getRecords);
 
 apiRouter.get("/records/:id", records.getRecord);
+
+apiRouter.use(auth); 
 
 
 module.exports=apiRouter
