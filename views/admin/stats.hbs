@@ -95,7 +95,6 @@
                 <td>{{this.owner_surname}}</td>
                 <td>{{dateFormat this.date_created "MMMM Do YYYY, hh:mm:ss a" }}</td>
                 <td>
-                    <!-- BUG: form action URLs still point to /theft-records, will 404 -->
                     <a class="btn btn-primary" href="records/{{this._id}}">View</a>
                     <a class="btn btn-warning" href="records/{{this._id}}/edit">Edit</a>
                     <form action="" method="post" style="display: inline;">

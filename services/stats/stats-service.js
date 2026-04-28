@@ -1,4 +1,3 @@
-// No aggregation pipeline — just multiple countDocuments calls
 const { TheftRecord, CarInfo, Status, User } = require("../../models");
 
 class StatsService {

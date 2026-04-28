@@ -108,6 +108,8 @@ All endpoints except `/api/public` require an `Authorization` header:
 
 - Some views still use hardcoded test data (see `car-infos-render.js`).
 - The Auth middleware signature verification is currently skipped in development – enable before production.
+- Stats endpoint uses Redis cache with 60s TTL.
+- Health check verifies Redis and database connectivity.
 
 ## License
 
