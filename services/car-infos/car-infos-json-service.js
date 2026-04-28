@@ -29,11 +29,12 @@ function validateCarFields(body) {
     return errors;
 }
 
+// TODO: fix this
 class CarInfosJsonService {
 
     // ─── LIST ───────────────────────────────────────────────────
 
-    async getCars(req, res) {
+    async fetchCars(req, res) {
         try {
             const query = {};
             const page = Math.max(1, parseInt(req.query.page) || 1);
@@ -70,14 +71,14 @@ class CarInfosJsonService {
                 meta: { total, page, limit, pages: Math.ceil(total / limit) }
             });
         } catch (error) {
-            console.error("Error fetching car-infos:", error);
-            res.status(500).json({ error: "Error fetching car-infos", details: error.message });
+            console.error("Error fetching cars:", error);
+            res.status(400).json({ error: "Error fetching cars" });
         }
     }
 
     // ─── SINGLE ─────────────────────────────────────────────────
 
-    async getCar(req, res) {
+    async fetchCar(req, res) {
         try {
             const carId = req.params.id;
             if (!carId || isNaN(parseInt(carId))) {
@@ -138,11 +139,11 @@ class CarInfosJsonService {
 
             res.status(201).json({ success: true, data: formatCar(car) });
         } catch (error) {
-            console.error("Error creating car:", error);
+            console.warn("Error creating car:", error);
             if (error.code === 11000) {
-                return res.status(409).json({ error: 'Duplicate entry' });
+                return res.status(400).json({ error: 'Duplicate entry' });
             }
-            res.status(500).json({ error: "Error creating car", details: error.message });
+            res.status(400).json({ error: "Error creating car" });
         }
     }
 
@@ -178,14 +179,14 @@ class CarInfosJsonService {
 
             res.json({ success: true, data: formatCar(result) });
         } catch (error) {
-            console.error("Error updating car:", error);
-            res.status(500).json({ error: "Error updating car", details: error.message });
+            console.warn("Error updating car:", error);
+            res.status(400).json({ error: "Error updating car" });
         }
     }
 
     // ─── DELETE ─────────────────────────────────────────────────
 
-    async deleteCar(req, res) {
+    async removeCar(req, res) {
         try {
             const carId = req.params.id;
             if (!carId || isNaN(parseInt(carId))) {
@@ -210,8 +211,8 @@ class CarInfosJsonService {
 
             res.json({ success: true, message: 'Car deleted', id: parseInt(carId) });
         } catch (error) {
-            console.error("Error deleting car:", error);
-            res.status(500).json({ error: "Error deleting car", details: error.message });
+            console.warn("Error removing car:", error);
+            res.status(400).json({ error: "Error removing car" });
         }
     }
 
@@ -242,8 +243,8 @@ class CarInfosJsonService {
                 }))
             });
         } catch (error) {
-            console.error("Error in autocomplete:", error);
-            res.status(500).json({ error: "Autocomplete error", details: error.message });
+            console.warn("Error in autocomplete:", error);
+            res.status(400).json({ error: "Autocomplete error" });
         }
     }
 
@@ -254,8 +255,8 @@ class CarInfosJsonService {
             const brands = await CarInfo.distinct('brand_name');
             res.json({ success: true, data: brands.sort() });
         } catch (error) {
-            console.error("Error listing brands:", error);
-            res.status(500).json({ error: "Error listing brands", details: error.message });
+            console.warn("Error listing brands:", error);
+            res.status(400).json({ error: "Error listing brands" });
         }
     }
 
@@ -292,8 +293,8 @@ class CarInfosJsonService {
                 results
             });
         } catch (error) {
-            console.error("Error bulk creating cars:", error);
-            res.status(500).json({ error: "Error bulk creating cars", details: error.message });
+            console.warn("Error bulk creating cars:", error);
+            res.status(400).json({ error: "Error bulk creating cars" });
         }
     }
 }

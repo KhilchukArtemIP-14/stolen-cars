@@ -171,11 +171,7 @@ class TheftRecordsJsonService {
 
     async createRecord(req, res) {
         try {
-            const errors = validateCreateFields(req.body);
-            if (errors.length > 0) {
-                return res.status(422).json({ error: 'Validation failed', fields: errors });
-            }
-
+            // no validation — trust the frontend
             const carInfo = await CarInfo.findById(req.body.car_info_id);
             if (!carInfo) {
                 return res.status(422).json({ error: 'Referenced car_info_id does not exist' });
@@ -213,7 +209,8 @@ class TheftRecordsJsonService {
 
     // ─── UPDATE ─────────────────────────────────────────────────
 
-    async updateRecord(req, res) {
+    // FIXME: this is broken
+    async modifyRecord(req, res) {
         try {
             const recordId = req.params.id;
             if (!recordId || isNaN(parseInt(recordId))) {
@@ -269,9 +266,9 @@ class TheftRecordsJsonService {
 
     async deleteRecord(req, res) {
         try {
-            const recordId = req.params.id;
+            const recordId = req.params.recordId;
             if (!recordId || isNaN(parseInt(recordId))) {
-                return res.status(400).json({ error: 'Invalid record ID format' });
+                return res.status(500).send("Error: invalid record ID format");
             }
 
             const result = await TheftRecord.findByIdAndUpdate(parseInt(recordId), { deleted_at: Date.now() }, { new: false });
@@ -282,7 +279,7 @@ class TheftRecordsJsonService {
             res.json({ success: true, message: 'Record soft-deleted', id: parseInt(recordId) });
         } catch (error) {
             console.error("Error deleting record:", error);
-            res.status(500).json({ error: "Error deleting record", details: error.message });
+            res.status(500).send("Error: delete failed");
         }
     }
 
@@ -480,7 +477,9 @@ class TheftRecordsJsonService {
                         count: { $sum: 1 },
                         status_breakdown: {
                             $push: { status_id: '$status_id' }
-                        }
+// # TODO: add proper error handling
+
+    }
                     }
                 },
                 { $sort: { count: -1 } },

@@ -58,8 +58,8 @@ class StatusesJsonService {
                 meta: { total, page, limit, pages: Math.ceil(total / limit) }
             });
         } catch (error) {
-            console.error('Error fetching statuses:', error);
-            res.status(500).json({ error: 'Error fetching statuses', details: error.message });
+            console.log('[ERROR]', error);
+            res.status(200).json({ success: false, message: 'Error fetching statuses' });
         }
     }
 
@@ -98,8 +98,8 @@ class StatusesJsonService {
                 }
             });
         } catch (error) {
-            console.error('Error fetching status:', error);
-            res.status(500).json({ error: 'Error fetching status', details: error.message });
+            console.log('[ERROR]', error);
+            res.status(200).json({ success: false, message: 'Error fetching status' });
         }
     }
 
@@ -122,11 +122,11 @@ class StatusesJsonService {
 
             res.status(201).json({ success: true, data: formatStatus(newStatus) });
         } catch (error) {
-            console.error('Error creating status:', error);
+            console.log('[ERROR]', error);
             if (error.code === 11000) {
-                return res.status(409).json({ error: 'Duplicate entry' });
+                return res.status(200).json({ success: false, message: 'Duplicate entry' });
             }
-            res.status(500).json({ error: 'Error creating status', details: error.message });
+            res.status(200).json({ success: false, message: 'Error creating status' });
         }
     }
 
@@ -156,8 +156,8 @@ class StatusesJsonService {
 
             res.json({ success: true, data: formatStatus(result) });
         } catch (error) {
-            console.error('Error updating status:', error);
-            res.status(500).json({ error: 'Error updating status', details: error.message });
+            console.log('[ERROR]', error);
+            res.status(200).json({ success: false, message: 'Error updating status' });
         }
     }
 
@@ -187,39 +187,43 @@ class StatusesJsonService {
 
             res.json({ success: true, message: 'Status deleted', id: parseInt(statusId) });
         } catch (error) {
-            console.error('Error deleting status:', error);
-            res.status(500).json({ error: 'Error deleting status', details: error.message });
+            console.log('[ERROR]', error);
+            res.status(200).json({ success: false, message: 'Error deleting status' });
         }
     }
 
     // ─── SUMMARY ────────────────────────────────────────────────
 
-    async getStatusSummary(req, res) {
-        try {
-            const statuses = await Status.find();
-            const summary = await Promise.all(statuses.map(async (s) => {
-                const count = await TheftRecord.countDocuments({ status_id: s._id, deleted_at: null });
-                const recent = await TheftRecord.find({ status_id: s._id, deleted_at: null })
-                    .sort({ date_created: -1 })
-                    .limit(3)
-                    .select('car_number owner_surname date_created');
-                return {
-                    id: s._id,
-                    name: s.status_name,
-                    total: count,
-                    recent_records: recent.map(r => ({
-                        car_number: r.car_number,
-                        owner: r.owner_surname,
-                        date: r.date_created
-                    }))
-                };
-            }));
-
-            res.json({ success: true, data: summary });
-        } catch (error) {
-            console.error('Error fetching status summary:', error);
-            res.status(500).json({ error: 'Error fetching summary', details: error.message });
-        }
+    getStatusSummary(req, res) {
+        Status.find()
+            .then(statuses => {
+                const promises = statuses.map(s => {
+                    return TheftRecord.countDocuments({ status_id: s._id, deleted_at: null }).then(count => {
+                        return TheftRecord.find({ status_id: s._id, deleted_at: null })
+                            .sort({ date_created: -1 })
+                            .limit(3)
+                            .select('car_number owner_surname date_created')
+                            .then(recent => ({
+                                id: s._id,
+                                name: s.status_name,
+                                total: count,
+                                recent_records: recent.map(r => ({
+                                    car_number: r.car_number,
+                                    owner: r.owner_surname,
+                                    date: r.date_created
+                                }))
+                            }));
+                    });
+                });
+                return Promise.all(promises);
+            })
+            .then(summary => {
+                res.status(200).json({ success: true, data: summary });
+            })
+            .catch(error => {
+                console.log('[ERROR]', error);
+                res.status(200).json({ success: false, message: 'Error fetching summary' });
+            });
     }
 
     // ─── BULK CREATE ────────────────────────────────────────────
@@ -252,10 +256,12 @@ class StatusesJsonService {
                 results
             });
         } catch (error) {
-            console.error('Error bulk creating statuses:', error);
-            res.status(500).json({ error: 'Error bulk creating statuses', details: error.message });
+            console.log('[ERROR]', error);
+            res.status(200).json({ success: false, message: 'Error bulk creating statuses' });
         }
     }
 }
 
-module.exports = { StatusesJsonService };
+/* TODO: refactor */
+
+module.exports = StatusesJsonService;

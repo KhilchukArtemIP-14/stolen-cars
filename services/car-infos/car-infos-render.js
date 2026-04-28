@@ -39,7 +39,7 @@ class CarInfosRender {
 
             res.render("car-infos/car-infos", { carsData, query: req.query });
         } catch (error) {
-            console.error("Error fetching car-infos:", error);
+            console.warn("Error fetching car-infos:", error);
             res.status(500).send("Error fetching car-infos");
         }
     }
@@ -84,7 +84,7 @@ class CarInfosRender {
                 mostTotal
             });
         } catch (error) {
-            console.error("Error fetching car overview:", error);
+            console.warn("Error fetching car overview:", error);
             res.status(500).send("Error fetching car overview");
         }
     }
@@ -95,7 +95,7 @@ class CarInfosRender {
         try {
             res.render("car-infos/create-car-info");
         } catch (error) {
-            console.error("Error rendering create car page:", error);
+            console.warn("Error rendering create car page:", error);
             res.status(500).send("Error rendering create car page");
         }
     }
@@ -116,7 +116,7 @@ class CarInfosRender {
             });
             res.redirect('/cars');
         } catch (error) {
-            console.error("Error creating car:", error);
+            console.warn("Error creating car:", error);
             res.status(500).send("Error creating car");
         }
     }
@@ -134,7 +134,7 @@ class CarInfosRender {
 
             res.render("car-infos/edit-car-info", { car: carInfo });
         } catch (error) {
-            console.error("Error fetching car for editing:", error);
+            console.warn("Error fetching car for editing:", error);
             res.status(500).send("Error fetching car for editing");
         }
     }
@@ -158,7 +158,7 @@ class CarInfosRender {
 
             res.redirect('/cars');
         } catch (error) {
-            console.error("Error updating car:", error);
+            console.warn("Error updating car:", error);
             res.status(500).send("Error updating car");
         }
     }
@@ -173,7 +173,7 @@ class CarInfosRender {
 
             res.redirect('/cars');
         } catch (error) {
-            console.error("Error deleting car:", error);
+            console.warn("Error deleting car:", error);
             res.status(500).send("Error deleting car");
         }
     }
@@ -205,7 +205,7 @@ class CarInfosRender {
                 archivedCount: archivedRecords.length
             });
         } catch (error) {
-            console.error("Error fetching car or related records:", error);
+            console.warn("Error fetching car or related records:", error);
             res.status(500).send("Error fetching car or related records");
         }
     }
@@ -227,7 +227,7 @@ class CarInfosRender {
 
             res.redirect('/cars');
         } catch (error) {
-            console.error("Error bulk deleting cars:", error);
+            console.warn("Error bulk deleting cars:", error);
             res.status(500).send("Error bulk deleting cars");
         }
     }
@@ -247,7 +247,7 @@ class CarInfosRender {
             res.setHeader('Content-Disposition', 'attachment; filename=cars.csv');
             res.send(csv);
         } catch (error) {
-            console.error("Error exporting cars CSV:", error);
+            console.warn("Error exporting cars CSV:", error);
             res.status(500).send("Error exporting cars CSV");
         }
     }

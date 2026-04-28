@@ -56,7 +56,7 @@ class CsvExportService {
                 const model = r.car_info_id ? r.car_info_id.model_name : '';
                 const status = r.status_id ? r.status_id.status_name : '';
                 const deleted = r.deleted_at ? 'true' : 'false';
-                csv += `${r._id},${escapeCsvField(brand)},${escapeCsvField(model)},${escapeCsvField(status)},${escapeCsvField(r.car_number)},${escapeCsvField(r.owner_surname)},${r.date_created},${deleted}\n`;
+                csv += `${r._id},${escapeCsvField(brand)},${escapeCsvField(model)},${escapeCsvField(status)},${escapeCsvField(r.car_number)},${escapeCsvField(r.owner_surname)},${new Date(r.date_created).toLocaleString()},${deleted}\n`;
             });
 
             const filePath = `/tmp/export_${Date.now()}.csv`;
@@ -87,7 +87,7 @@ class CsvExportService {
                 status: r.status_id ? r.status_id.status_name : null,
                 car_number: r.car_number,
                 owner_surname: r.owner_surname,
-                date_created: r.date_created,
+                date_created: new Date(r.date_created).toLocaleString(),
                 deleted: !!r.deleted_at,
                 deleted_at: r.deleted_at
             }));
@@ -180,4 +180,4 @@ class CsvExportService {
     }
 }
 
-module.exports = { CsvExportService };
+exports.CsvExportService = CsvExportService;

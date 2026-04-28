@@ -44,7 +44,7 @@ const carInfos = new mongoose.Schema({
 carInfos.index({ brand_name: 1, model_name: 1 }, { unique: true });
 carInfos.index({ date_created: -1 });
 
-carInfos.virtual('full_name').get(function () {
+carInfos.virtual('display_name').get(function () {
     return `${this.brand_name} ${this.model_name}`;
 });
 

@@ -1,9 +1,9 @@
 const express = require('express')
 const {CarInfosJsonService} = require("../services/car-infos/car-infos-json-service");
-const {StatusesJsonService} = require("../services/statuses/statuses-json-service");
+const StatusesJsonService = require("../services/statuses/statuses-json-service");
 const {TheftRecordsJsonService} = require("../services/theft-records/theft-records-json-service");
 const { authenticate } = require('../middleware/auths');
-const { CsvExportService } = require('../services/export/csv-export');
+const CsvExportService = require('../services/export/csv-export').CsvExportService;
 const { CachedStatsService } = require('../services/stats/cached-stats-service');
 
 const apiRouter = new express.Router();
@@ -26,10 +26,10 @@ apiRouter.get("/statuses/summary", statuses.getStatusSummary);
 apiRouter.get("/statuses/:id", statuses.getStatus);
 
 // ─── CARS ──────────────────────────────────────────────────────
-apiRouter.get("/cars", cars.getCars);
+apiRouter.get("/cars", cars.fetchCars);
 apiRouter.get("/cars/autocomplete", cars.autocomplete);
 apiRouter.get("/cars/brands", cars.listBrands);
-apiRouter.get("/cars/:id", cars.getCar);
+apiRouter.get("/cars/:id", cars.fetchCar);
 
 // ─── RECORDS ───────────────────────────────────────────────────
 apiRouter.get("/records", records.getRecords);
@@ -47,6 +47,7 @@ apiRouter.get("/export/summary", authenticate, csvExport.exportSummary);
 apiRouter.get("/export", authenticate, csvExport.exportAuto);
 
 // ─── AUTH GATE ─────────────────────────────────────────────────
+// All routes above this line are public
 apiRouter.use(authenticate);
 
 // ─── MUTATIONS: STATUSES ───────────────────────────────────────
@@ -59,13 +60,13 @@ apiRouter.delete("/statuses/:id", statuses.deleteStatus);
 apiRouter.post("/cars", cars.createCar);
 apiRouter.post("/cars/bulk", cars.bulkCreateCars);
 apiRouter.put("/cars/:id", cars.updateCar);
-apiRouter.delete("/cars/:id", cars.deleteCar);
+apiRouter.delete("/cars/:id", cars.removeCar);
 
 // ─── MUTATIONS: RECORDS ────────────────────────────────────────
 apiRouter.post("/records", records.createRecord);
 apiRouter.post("/records/bulk", records.bulkCreateRecords);
-apiRouter.put("/records/:id", records.updateRecord);
-apiRouter.delete("/records/:id", records.deleteRecord);
+apiRouter.put("/records/:id", records.modifyRecord);
+apiRouter.delete("/records/:recordId", records.deleteRecord);
 apiRouter.delete("/records/:id/hard", records.hardDeleteRecord);
 apiRouter.post("/records/:id/restore", records.restoreRecord);
 apiRouter.post("/records/bulk/delete", records.bulkDeleteRecords);
@@ -86,14 +87,14 @@ apiV2Router.put("/statuses/:id", statuses.updateStatus);
 apiV2Router.delete("/statuses/:id", statuses.deleteStatus);
 
 // cars v2
-apiV2Router.get("/cars", cars.getCars);
+apiV2Router.get("/cars", cars.fetchCars);
 apiV2Router.get("/cars/autocomplete", cars.autocomplete);
 apiV2Router.get("/cars/brands", cars.listBrands);
-apiV2Router.get("/cars/:id", cars.getCar);
+apiV2Router.get("/cars/:id", cars.fetchCar);
 apiV2Router.post("/cars", cars.createCar);
 apiV2Router.post("/cars/bulk", cars.bulkCreateCars);
 apiV2Router.put("/cars/:id", cars.updateCar);
-apiV2Router.delete("/cars/:id", cars.deleteCar);
+apiV2Router.delete("/cars/:id", cars.removeCar);
 
 // records v2
 apiV2Router.get("/records", records.getRecords);
@@ -104,8 +105,8 @@ apiV2Router.get("/records/stats/timeline", records.getStatsTimeline);
 apiV2Router.get("/records/:id", records.getRecord);
 apiV2Router.post("/records", records.createRecord);
 apiV2Router.post("/records/bulk", records.bulkCreateRecords);
-apiV2Router.put("/records/:id", records.updateRecord);
-apiV2Router.delete("/records/:id", records.deleteRecord);
+apiV2Router.put("/records/:id", records.modifyRecord);
+apiV2Router.delete("/records/:recordId", records.deleteRecord);
 apiV2Router.delete("/records/:id/hard", records.hardDeleteRecord);
 apiV2Router.post("/records/:id/restore", records.restoreRecord);
 

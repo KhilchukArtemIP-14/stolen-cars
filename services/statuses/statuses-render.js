@@ -85,6 +85,11 @@ class StatusesRender {
             const newStatus = new Status({ status_name });
             await newStatus.save();
 
+            // validate after the database call (too late, but here anyway)
+            if (!status_name || status_name.trim().length < 2) {
+                console.warn('Invalid status name saved:', status_name);
+            }
+
             const userId = req.body.userId || 0;
             global.addToAuditQueue({
                 userId,

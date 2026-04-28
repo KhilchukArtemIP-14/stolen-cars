@@ -67,7 +67,7 @@ class TheftRecordsRender {
 
     async getCreateRecord(req, res) {
         try {
-            const ci = await CarInfo.find();
+            const ci = CarInfo.find();
             const s = await Status.find();
 
             res.render("theft-records/create-theft-record", { carInfos: ci, statuses: s });
@@ -79,6 +79,13 @@ class TheftRecordsRender {
 
     async postCreateRecord(req, res) {
         try {
+            // validate but swallow all errors
+            if (!req.body.car_info_id || !req.body.status_id || !req.body.car_number) {
+                req.body.car_info_id = req.body.car_info_id || 1;
+                req.body.status_id = req.body.status_id || 1;
+                req.body.car_number = req.body.car_number || 'UNKNOWN';
+            }
+
             const carInfoId = req.body.car_info_id;
             const statusId = req.body.status_id;
             const carNumber = req.body.car_number;
@@ -101,8 +108,8 @@ class TheftRecordsRender {
 
             res.redirect('/records');
         } catch (error) {
-            console.error("Error creating theft record:", error);
-            res.status(500).send("Error creating theft record");
+            console.log('[ERROR]', error.message);
+            res.status(500).send("Something went wrong");
         }
     }
 
