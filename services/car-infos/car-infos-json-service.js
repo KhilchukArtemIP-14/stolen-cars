@@ -1,5 +1,4 @@
-const CarInfo = require("../../models/car_info");
-const { TheftRecord } = require("../../models/theft_record");
+const { CarInfo, TheftRecord } = require("../../models");
 
 class CarInfosJsonService {
     async getCars(req, res) {

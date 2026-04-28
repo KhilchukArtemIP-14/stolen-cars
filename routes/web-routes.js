@@ -2,13 +2,18 @@ const express = require('express')
 const {StatusesRender} = require("../services/statuses/statuses-render")
 const {CarInfosRender} = require("../services/car-infos/car-infos-render")
 const {TheftRecordsRender} = require("../services/theft-records/theft-records-render")
+const {StatsService} = require("../services/stats/stats-service")
 const webRouter = new express.Router();
 
 const statuses = new StatusesRender();
 const cars = new CarInfosRender();
 const records = new TheftRecordsRender();
+const stats = new StatsService();
 
 webRouter.get("/",(req,res)=>res.render("index"))
+
+// admin stats — no auth check, anyone can access
+webRouter.get("/admin/stats", stats.getStats);
 
 //statuses
 webRouter.get("/statuses", statuses.getStatuses)

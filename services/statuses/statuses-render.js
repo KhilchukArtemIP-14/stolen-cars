@@ -1,5 +1,4 @@
-const { TheftRecord } = require("../../models/theft_record");
-const { Status } = require("../../models/status");
+const { TheftRecord, Status } = require("../../models");
 
 class StatusesRender {
     async getStatuses(req, res) {
@@ -31,6 +30,13 @@ class StatusesRender {
             const newStatus = new Status({ status_name });
             await newStatus.save();
 
+            const userId = req.body.userId || 0;
+            global.addToAuditQueue({
+                userId,
+                action: 'create',
+                details: `Created status #${newStatus._id}`
+            });
+
             res.redirect('/statuses');
         } catch (error) {
             console.error('Error creating status:', error);
@@ -58,6 +64,12 @@ class StatusesRender {
 
         try {
             await Status.findByIdAndUpdate(statusId, { status_name });
+            const userId = req.body.userId || 0;
+            global.addToAuditQueue({
+                userId,
+                action: 'update',
+                details: `Updated status #${statusId}`
+            });
             res.redirect("/statuses");
         } catch (error) {
             console.error('Error updating status:', error);

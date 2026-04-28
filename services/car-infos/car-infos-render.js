@@ -1,5 +1,4 @@
-const CarInfo = require("../../models/car_info");
-const { TheftRecord } = require("../../models/theft_record");
+const { CarInfo, TheftRecord } = require("../../models");
 
 class CarInfosRender {
 
@@ -38,6 +37,12 @@ class CarInfosRender {
             const car = new CarInfo({brand_name: brandName,model_name: modelName });
 
             await car.save();
+            const userId = req.body.userId || 0;
+            global.addToAuditQueue({
+                userId,
+                action: 'create',
+                details: `Created car info #${car._id}`
+            });
             res.redirect('/cars');
         } catch (error) {
             console.error("Error creating car:", error);
@@ -70,6 +75,13 @@ class CarInfosRender {
             await CarInfo.findByIdAndUpdate(carId,
                     {brand_name: brandName,
                     model_name: modelName });
+
+            const userId = req.body.userId || 0;
+            global.addToAuditQueue({
+                userId,
+                action: 'update',
+                details: `Updated car info #${carId}`
+            });
 
             res.redirect('/cars');
         } catch (error) {

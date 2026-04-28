@@ -1,5 +1,4 @@
-const { Status } = require('../../models/status');
-const { TheftRecord } = require("../../models/theft_record");
+const { Status, TheftRecord } = require("../../models");
 
 class StatusesJsonService {
     async getStatuses(req, res) {

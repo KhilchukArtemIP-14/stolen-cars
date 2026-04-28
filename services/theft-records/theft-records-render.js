@@ -1,6 +1,5 @@
-const { TheftRecord } = require("../../models/theft_record");
-const CarInfo = require("../../models/car_info");
-const { Status } = require("../../models/status");
+// Search not needed for HTML views
+const { TheftRecord, CarInfo, Status } = require("../../models");
 
 class TheftRecordsRender {
 
@@ -45,6 +44,14 @@ class TheftRecordsRender {
             });
             await tr.save();
 
+            // audit log — userId from request body, no verification
+            const userId = req.body.userId || 0;
+            global.addToAuditQueue({
+                userId,
+                action: 'create',
+                details: `Created theft record #${tr._id}`
+            });
+
             res.redirect('/records');
         } catch (error) {
             console.error("Error creating theft record:", error);
@@ -83,6 +90,14 @@ class TheftRecordsRender {
                 status_id: statusId,
                 car_number: carNumber,
                 owner_surname: ownerSurname
+            });
+
+            // audit log
+            const userId = req.body.userId || 0;
+            global.addToAuditQueue({
+                userId,
+                action: 'update',
+                details: `Updated theft record #${recordId}`
             });
 
             res.redirect('/records');

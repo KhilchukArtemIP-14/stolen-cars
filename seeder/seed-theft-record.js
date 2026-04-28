@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const {TheftRecord} = require("../models/theft_record")
+const { TheftRecord } = require("../models")
 
 const seedData = [
     {

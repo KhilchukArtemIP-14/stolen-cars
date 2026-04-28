@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { Status} = require('../models/status');
+const { Status } = require('../models');
 
 const seedData = [
     { status_name: 'Stolen'},

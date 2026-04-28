@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const CarInfo = require("../models/car_info");
+const { CarInfo } = require("../models");
 
 const seedData = [
     { brand_name: 'Toyota', model_name: 'Camry' },
